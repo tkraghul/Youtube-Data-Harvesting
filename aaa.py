@@ -44,13 +44,13 @@ def channel_details(channel_id):
     for i in range(len(response['items'])):
         data = dict(
                     channel_id=response['items'][i]['id'],
-                    channel_name= response ['items'][i]['snippet']['title'],                                    ###channel_name
-                    description=response ['items'][i]['snippet']['description'],                               #### description
-                    subscribers=response ['items'][i]['statistics']['subscriberCount'],                        #### subscribercount
-                    view_count=response ['items'][i]['statistics']['viewCount'],                               #### view count
-                    video_count=response ['items'][i]['statistics']['videoCount'],                            #### video count
-                    publish_date=response ['items'][i]['snippet']['publishedAt'],                              #### published at
-                    play_list=response ['items'][i]['contentDetails']['relatedPlaylists']['uploads']           #### play list
+                    channel_name= response ['items'][i]['snippet']['title'],                                    
+                    description=response ['items'][i]['snippet']['description'],                               
+                    subscribers=response ['items'][i]['statistics']['subscriberCount'],                        
+                    view_count=response ['items'][i]['statistics']['viewCount'],                               
+                    video_count=response ['items'][i]['statistics']['videoCount'],                           
+                    publish_date=response ['items'][i]['snippet']['publishedAt'],                              
+                    play_list=response ['items'][i]['contentDetails']['relatedPlaylists']['uploads']           
                     )
         ch_data.append(data)
     return ch_data
@@ -102,8 +102,7 @@ def playlists_id(channel_id):
         data=dict(play_list_id=response ['items'][i]['snippet']['playlistId'],
                   channel_id=response ['items'][i]['snippet']['channelId'],
               play_list_name=response ['items'][i]['snippet']['channelTitle'])
-#               videoid=response ['items'][i]['contentDetails']['videoId'])
-        # dic.append(data)
+            
         play_l.append(data)
     return play_l
 
@@ -122,7 +121,6 @@ def duration(duration_str):
         minutes = int(minutes_part)
     if 'S' in duration_str:  
         seconds =int(duration_str.split('S')[0])
-    # return f'{hours:02d}:{minutes:02d}:{seconds:02d}'
         d=(hours*3600)+(minutes*60)+(seconds)
         return d
 
@@ -174,8 +172,7 @@ def channels_comment(v_ids):
                comment_publishedAt=response ['items'][i]['snippet']['topLevelComment']['snippet']['updatedAt'],
              )
             id.append(data)
-            # new_dic.append(data) 
-            # dic.append(data) 
+            
             result = {}
             for comment in id:
                 video_id = comment['video_id']
@@ -206,7 +203,7 @@ def channel_names():
     dass=[]
     for i in channel.find({},{"_id":0,'channel_details.channel_name':1}):
         ch_name.append(i)
-        # st.write(ch_name)
+    
     for j in ch_name:
             a=j['channel_details'][0]['channel_name']
             dass.append(a)
@@ -336,27 +333,21 @@ def all_table():
 if selected =="transform":          
         st.markdown("## Select a channel and Transformation to SQL")
         ch_names = channel_names() 
-        # st.write(ch_names)
         user_inp = st.selectbox("Select channel",options= ch_names)     
         for all_de in channel.find({'channel_details.channel_name':user_inp},{'_id':0}):
-            # st.write(all_de)
             a=all_de['channel_details']
             st.table(a)
-            # channel_df=pd.DataFrame(a)
             d=all_de['playlist_details']
-            # playlist_df=pd.DataFrame(d)
             b=all_de['video_details']
-            # video_df=pd.DataFrame(b)
             comment_video_id=[]
             for k in range(0,10):
                 k=all_de['video_details'][k]['video_id']
                 comment_video_id.append(k)
-            # print(comment_video_id)    
             g=[]
             for i in comment_video_id:
                 g.append(all_de['comment_details'][0][i])
             c= [item for sublist in g for item in sublist]
-    # comment_df=pd.DataFrame(c)
+
 
 
             
@@ -387,7 +378,6 @@ if selected =="view":
         mycursor.execute("""SELECT channel_name , video_name FROM video_details
                             order BY channel_name""")
         out=mycursor.fetchall()
-        # print(tabulate(out,headers=[i[0] for i in mycursor.description],  tablefmt='psql'))
         df = pd.DataFrame(out,columns=mycursor.column_names)
         st.write(df)
 
